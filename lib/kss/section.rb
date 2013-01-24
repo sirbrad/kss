@@ -11,13 +11,17 @@ module Kss
     # Public: Returns the filename where this section is found.
     attr_reader :filename
 
+    # Public: Returns the filepath of the filename.
+    attr_reader :filepath
+
     # Public: Initialize a new Section
     #
     # comment_text - The raw comment String, minus any comment syntax.
     # filename     - The filename as a String.
-    def initialize(comment_text=nil, filename=nil)
+    def initialize(comment_text=nil, filepath=nil, filename=nil)
       @raw = comment_text
       @filename = filename
+      @filepath = filepath
     end
 
     # Splits up the raw comment text into comment sections that represent
@@ -77,13 +81,13 @@ module Kss
     end
 
   private
-  
+
     def section_comment
       comment_sections.find do |text|
         text =~ /Styleguide \d/i
       end.to_s
     end
-  
+
     def modifiers_comment
       comment_sections[1..-1].reject do |section|
         section == section_comment
