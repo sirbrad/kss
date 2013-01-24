@@ -2,10 +2,10 @@ module Kss
   # Public: The main KSS parser. Takes a directory full of SASS / SCSS / CSS
   # files and parses the KSS within them.
   class Parser
-    
+
     # Public: Returns a hash of Sections.
     attr_accessor :sections
-    
+
     # Public: Initializes a new parser based on a directory of files. Scans
     # within the directory recursively for any comment blocks that look like
     # KSS.
@@ -25,8 +25,9 @@ module Kss
     end
 
     def add_section comment_text, filename
+      base_path = current_directory_path(File.dirname(filename))
       base_name = File.basename(filename)
-      section = Section.new(comment_text, base_name)
+      section = Section.new(comment_text, base_path, base_name)
       @sections[section.section] = section
     end
 
@@ -46,6 +47,13 @@ module Kss
     # Returns a Section for a reference, or a blank Section if none found.
     def section(reference)
       @sections[reference] || Section.new
+    end
+
+    # Public: Removes current working directory from absolute path
+    #
+    # Returns a string of the current file's relative path
+    def current_directory_path(file)
+      file.gsub(`pwd`.chomp, "")
     end
 
   end
